@@ -54,7 +54,7 @@ app.use (err, req, res, next)->
     message: err.message
     error: {}
 
-PORT = process.env.port || 3000
+PORT = process.env.PORT || 3000
 app.set 'port', PORT
 server = http.createServer app
 server.listen app.get 'port'
