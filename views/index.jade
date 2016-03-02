@@ -1,0 +1,67 @@
+extends layout
+
+block content
+	script#auth(type='text/ng-template')
+		.modal-header
+			h3.modal-title.text-center Авторизация
+		.modal-body
+			form
+				.form-group
+					input.form-control(type='text', placeholder='Логин', ng-model='login', autofocus='')
+				.form-group
+					input.form-control(type='password', placeholder='Пароль', ng-model='pwd')
+				.form-group
+					button.btn.btn-success.form-control(ng-click='ok()') OK
+	script#print(type='text/ng-template')
+		.modal-header Чек
+			.modal-body
+				table.table-condenced
+					tr(ng-repeat='item in list')
+						td {{item.name}} 
+						td {{item.mass.toFixed(2)}}*{{item.price.toFixed(2)}}={{item.cost.toFixed(2)}}
+				br
+				div
+					b Всего: {{total}}
+				hr
+				div  Приятного дня!
+				br
+				div {{date | date : 'dd.MM.yyyy HH:mm:ss'}}
+					div
+					.modal-footer
+						button.btn.btn-default(ng-click='ok()') Закрыть
+	body.container-fluid(ng-controller='mainCtrl')
+		#body.row(ng-show='authSuccess')
+			.col-xs-3(style='position: fixed')
+				form.well.well-sm
+					.checkbox
+						label
+							input(type='checkbox', ng-model='discount')
+							| Дисконт карта (3%)
+				.form-group
+					button.btn.btn-info.form-control.btn-high(ng-click='print()') Печать чека
+				.form-group
+					.row
+						div(ng-class='{"col-xs-6": removeMode, "col-xs-12": !removeMode}')
+							button#button1.btn.btn-danger.form-control.btn-high(ng-click='switchRemoveMode()') {{removeModeTitle}}
+						.col-xs-6(ng-show='removeMode')
+							button.btn.btn-danger.form-control.btn-high(ng-click='removeSelected()') Удалить
+				.form-group
+					button.btn.btn-default.form-control.btn-high(onclick='location.reload()') Выход
+			.col-xs-9.col-xs-offset-3
+				table.table.table-responsive.table-bordered.table-hover(style='margin-top: 0')
+					tr.info
+						th.text-center.col-xs-3 Товар
+						th.text-center.col-xs-3 Масса
+						th.text-center.col-xs-3 Цена
+						th.text-center.col-xs-3 Стоимость
+					tr(ng-repeat='product in list')
+						td.col-xs-3
+							.checkbox
+								label
+									input(type='checkbox', ng-if='removeMode', ng-model='product.selected')
+									| {{product.name}}
+						td.text-center.col-xs-3 {{product.mass.toFixed(2)}}
+						td.text-center.col-xs-3 {{product.price}}
+						td.text-center.col-xs-3 {{product.cost.toFixed(2)}}
+				h3.text-right(ng-show='list.length>0')
+					| Всего: {{total()}}
